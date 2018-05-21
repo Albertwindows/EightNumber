@@ -1,68 +1,90 @@
 #include <iostream>
 #include <stdio.h>
-
+#include <math.h>
+#include <stdlib.h>
 using namespace std;
 struct Point{int x,y;};
-//×ø±êÊÇ´Ó0¿ªÊ¼µÄ
+//åæ ‡æ˜¯ä»0å¼€å§‹çš„
 Point dis[9]={{1,1},{0,0},{0,1},{0,2},{1,2},{2,2},{2,1},{2,0},{1,0}};
+//stå‚¨å­˜çš„æ˜¯æ ‡å‡†çš„çŠ¶æ€å€¼æˆ–è€…ç›®æ ‡å€¼
+const int st[3][3]={{1,2,3},{8,0,4},{7,6,5}};
 class Note{
-
-
-	int h,w;
 	static const int len=3;
 	int d[3][3];
-	const int st[3][3]={{1,2,3},{8,0,4},{7,6,5}};
 	static int dn;
-//f(n)=d(n)+w(n)
+	int father;
+	class Note * next[4];
 
 public:
-    //Dn ÊÇµ±Ç°½ÚµãµÄÉî¶È¡£
+    //Dn æ˜¯å½“å‰èŠ‚ç‚¹çš„æ·±åº¦ã€‚
 
     int getDn(){
         return dn;
     }
+	//Wn æ˜¯ä¸è€ƒè™‘ç©ºæ ¼ï¼Œé”™ä½çš„æ£‹ç‰Œä¸ªæ•°
     int getWn(){
         int cnt=0;
         for(int i=0;i<len;i++)
-			for (int j=0;j<len;j++) if (d[i][j]!=st[i][j]){cnt++;}
+			for (int j=0;j<len;j++) if (d[i][j]!=st[i][j] ){ if (d[i][j]!=0)cnt++;}
         return cnt;
     }
-    //¸Ä½øºóµÄw(n)->p(n ±ä³ÉÁË´íÎ»ÆåÅÆÔÚ²»ÊÜ×èÀ¹µÄÇé¿öÏÂ£¬
-    //ÒÆ¶¯µ½Ä¿±ê×´Ì¬ÏàÓ¦Î»ÖÃËùĞè×ß²½£¨ÒÆ¶¯´ÎÊı£©µÄ×ÜºÍ
+    //æ”¹è¿›åçš„w(n)->p(n) å˜æˆäº†é”™ä½æ£‹ç‰Œåœ¨ä¸å—é˜»æ‹¦çš„æƒ…å†µä¸‹ï¼Œ
+    //ç§»åŠ¨åˆ°ç›®æ ‡çŠ¶æ€ç›¸åº”ä½ç½®æ‰€éœ€èµ°æ­¥ï¼ˆç§»åŠ¨æ¬¡æ•°ï¼‰çš„æ€»å’Œ
 
     int getPn()
     {
-
+		int res=0;
+		for(int i=0;i<len;i++){
+			for (int j=0;j<len;j++){
+				int a=d[i][j];
+				if (a==0)
+					continue;
+				res+=abs(dis[a].x-i)+abs(dis[a].y-j);
+			}
+		}
+		return res;
     }
 
+	int getFn()
+	{
+		return getDn()+getWn();
+		//return getDn()+getPn();
+	}
 
-    Note(const int dd[3][3]){
+    Note(int dd[][3]){
         for(int i=0;i<len;i++){
 			for (int j=0;j<len;j++){
 				d[i][j]=dd[i][j];
 			}
 		}
     }
-    Note(int len1=3,int len2=3){
-	    h=len1;w=len2;
-		for(int i=0;i<h;i++){
-			for (int j=0;j<w;j++){
+    Note(){
+		for(int i=0;i<len;i++){
+			for (int j=0;j<len;j++){
 				d[i][j]=0;
 			}
 		}
 	}
     void print(){
-	    for(int i=0;i<h;i++){
-			for (int j=0;j<w;j++){
+	    for(int i=0;i<len;i++){
+			for (int j=0;j<len;j++){
 				printf("%d ",d[i][j]);
 			}
 			printf("\n");
 		}
 	}
 };
+void nextFloor()
+{
+
+}
 int main(){
-	Note n;
+	int init[3][3]={{1,0,3},{7,2,4},{6,5,8}};
+	int init1[3][3]={{3,6,5},{1,7,8},{4,0,2}};
+	Note n(init1);
+	Note nn[100];
 	n.print();
 	cout<<n.getWn()<<endl;
+	cout<<n.getPn()<<endl;
 	return 0;
 }
